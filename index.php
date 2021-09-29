@@ -18,14 +18,22 @@ final class Main
 {
     public static function run()
     {
+        //  INIT DATABASE
         $GLOBALS['DATABASE'] = new Database();
-        print_r($GLOBALS['DATABASE']);
-        $notify_model = new Notify();
 
-        die;
+        //  CREATE AND FILL MODEL
+        $notify_model = new Notify([
+            'user_id' => 1,
+            'name' => 'Some Notify Name',
+            'text' => 'Some Notify text',
+            'periodic' => 'everyday',
+            'time' => '10:00',
+            'category_id' => 0
+        ]);
 
+        // CREATE INSTANCE OF REPO AND CREATE RECORD IN DATABASE
         $notify_repo = new NotifyRepo();
-        $notify_repo->create();
+        $notify_repo->create($notify_model);
     }
 }
 

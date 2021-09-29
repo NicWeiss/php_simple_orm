@@ -14,10 +14,9 @@ class NotifyRepo extends Repository
         self::$model = new Notify();
     }
 
-    public function create()
+    public function create($model)
     {
         $db = self::$database;
-        $db->create(self::$model);
-        // return $model->commit();
+        $db->create($model);
     }
 }

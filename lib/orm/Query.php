@@ -2,32 +2,32 @@
 
 namespace lib\orm;
 
+use lib\orm\builder\MysqlBuilder;
 
 class Query
 {
 
-    function __construct($model)
+    function __construct()
     {
         $this->store = [];
-        $this->model = $model;
     }
 
-    public function select($filter = 'all')
+    public function create($model)
     {
-        $this->add_operation(array('select' => $filter));
+        $this->add_operation(array('create' => $model));
     }
 
     private function add_operation($operation)
     {
-        $keys = $this->model->get_model_properties();
-        print_r($keys);
         array_push($this->store, $operation);
-        print_r($this->store);
     }
 
-    public function build()
+    public function build_sql($driver)
     {
-        $table = get_class($this);
-        print_r($table);
+        if ($driver == 'mysql') {
+            $builder = new MysqlBuilder();
+        }
+
+        return $builder->build($this->store);
     }
 }

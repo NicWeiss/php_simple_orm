@@ -1,8 +1,8 @@
 <?php
 
-namespace lib\orm;
+namespace lib\simple_orm;
 
-use lib\orm\builder\MysqlBuilder;
+use lib\simple_orm\builder\MysqlBuilder;
 
 class Query
 {

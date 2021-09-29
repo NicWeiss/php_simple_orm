@@ -1,7 +1,7 @@
 <?php
 
 use repository\NotifyRepo as NotifyRepo;
-use lib\orm\Database as Database;
+use lib\simple_orm\Database as Database;
 use model\Notify;
 
 function autoload($classname)

@@ -2,7 +2,7 @@
 
 namespace model;
 
-use lib\orm\Model;
+use lib\simple_orm\Model;
 
 class Notify extends Model
 {

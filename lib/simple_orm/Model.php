@@ -1,6 +1,6 @@
 <?php
 
-namespace lib\orm;
+namespace lib\simple_orm;
 
 use Exception;
 

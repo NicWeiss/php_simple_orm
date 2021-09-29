@@ -1,6 +1,6 @@
 <?php
 
-namespace lib\orm\builder;
+namespace lib\simple_orm\builder;
 
 
 class MysqlBuilder

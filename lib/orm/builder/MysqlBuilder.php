@@ -2,7 +2,6 @@
 
 namespace lib\orm\builder;
 
-use function PHPSTORM_META\type;
 
 class MysqlBuilder
 {
@@ -50,6 +49,6 @@ class MysqlBuilder
             $values .= "$value";
         }
 
-        self::$sql = "INSERT INTO  $table ($fields) VALUES ($values);";
+        self::$sql = "INSERT INTO  $table ($fields) VALUES ($values)q;";
     }
 }

@@ -2,7 +2,7 @@
 
 namespace repository;
 
-use generic\Repository;
+use lib\orm\Repository;
 use model\Notify;
 
 class NotifyRepo extends Repository

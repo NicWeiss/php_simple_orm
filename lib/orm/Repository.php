@@ -1,6 +1,6 @@
 <?php
 
-namespace generic;
+namespace lib\orm;
 
 class Repository
 {

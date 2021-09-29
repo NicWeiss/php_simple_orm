@@ -49,6 +49,6 @@ class MysqlBuilder
             $values .= "$value";
         }
 
-        self::$sql = "INSERT INTO  $table ($fields) VALUES ($values)q;";
+        self::$sql = "INSERT INTO  $table ($fields) VALUES ($values);";
     }
 }

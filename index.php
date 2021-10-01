@@ -23,6 +23,7 @@ final class Main
 
         //  CREATE AND FILL MODEL
         $notify_model = new Notify([
+            'id' => 158,
             'user_id' => 1,
             'name' => 'Some Notify Name',
             'text' => 'Some Notify text',
@@ -31,9 +32,18 @@ final class Main
             'category_id' => 0
         ]);
 
+
+        //  CREATE AND FILL MODEL
+        $data_for_update = array(
+            'name' => 'Some Updated Name',
+            'text' => 'Some Updated text',
+            'time' => '20:00',
+        );
+
         // CREATE INSTANCE OF REPO AND CREATE RECORD IN DATABASE
         $notify_repo = new NotifyRepo();
-        $notify_repo->create($notify_model);
+        // $notify_repo->update($notify_model);
+        $notify_repo->update($notify_model, $data_for_update);
     }
 }
 

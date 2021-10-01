@@ -6,14 +6,17 @@ use Exception;
 
 class Model
 {
-    function __construct($array = null)
+    function __construct($values = null)
     {
-        if (!$array) {
-            return;
+        if ($values) {
+            $this->update($values);
         }
+    }
 
+    public function update($values)
+    {
         $properties = $this->get_model_properties();
-        foreach ($array as $key => $value) {
+        foreach ($values as $key => $value) {
             if (in_array($key, $properties)) {
                 $this->$key = $value;
             } else {
@@ -21,6 +24,8 @@ class Model
                 throw new Exception("Model $model_name does not have key: $key", 0);
             }
         }
+
+        return $this;
     }
 
     public function get_model_properties()

@@ -24,11 +24,13 @@ class Database
 
     private function fetch($sql)
     {
+        print_r($sql);
         return self::$db->query($sql)->fetch();
     }
 
     private function execute($sql)
     {
+        print_r($sql);
         if (!self::$db->prepare($sql)->execute()) {
             throw new Exception("Can't execute SQL: $sql", 0);
         }
@@ -42,8 +44,17 @@ class Database
         $query->create($model);
         $sql = $query->build_sql(self::$driver);
 
-        print_r($sql);
         $res = $this->execute($sql);
-        var_dump($res);
+        print_r($res);
+    }
+
+    function update($model)
+    {
+        $query = new Query();
+        $query->update($model);
+        $sql = $query->build_sql(self::$driver);
+
+        $res = $this->execute($sql);
+        print_r($res);
     }
 }

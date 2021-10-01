@@ -19,4 +19,10 @@ class NotifyRepo extends Repository
         $db = self::$database;
         $db->create($model);
     }
+
+    public function update($model, $new_values = null)
+    {
+        $db = self::$database;
+        $db->update($model->update($new_values));
+    }
 }

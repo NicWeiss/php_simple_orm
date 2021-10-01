@@ -17,6 +17,11 @@ class Query
         $this->add_operation(array('create' => $model));
     }
 
+    public function update($model)
+    {
+        $this->add_operation(array('update' => $model));
+    }
+
     private function add_operation($operation)
     {
         array_push($this->store, $operation);

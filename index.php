@@ -23,7 +23,6 @@ final class Main
 
         //  CREATE AND FILL MODEL
         $notify_model = new Notify([
-            'id' => 158,
             'user_id' => 1,
             'name' => 'Some Notify Name',
             'text' => 'Some Notify text',
@@ -42,9 +41,21 @@ final class Main
 
         // CREATE INSTANCE OF REPO AND CREATE RECORD IN DATABASE
         $notify_repo = new NotifyRepo();
-        // $notify_repo->update($notify_model);
+
+        //  CREATE RECORD IN DATABASE
+        $notify_repo->create($notify_model);
+
+        // UPDATE RECORD IN DATABASE
         $notify_repo->update($notify_model, $data_for_update);
+
+        // DELETE RECORD FROM DATABASE
+        $notify_repo->delete($notify_model);
+
+
+        $first = $notify_repo->get(47);
+        var_dump($first);
     }
 }
+
 
 Main::run();

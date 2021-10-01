@@ -6,17 +6,17 @@ use Exception;
 
 class Model
 {
-    function __construct($values = null)
+    function __construct($arrtibutes = null)
     {
-        if ($values) {
-            $this->update($values);
+        if ($arrtibutes) {
+            $this->update_attributes($arrtibutes);
         }
     }
 
-    public function update($values)
+    public function update_attributes($arrtibutes)
     {
         $properties = $this->get_model_properties();
-        foreach ($values as $key => $value) {
+        foreach ($arrtibutes as $key => $value) {
             if (in_array($key, $properties)) {
                 $this->$key = $value;
             } else {

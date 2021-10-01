@@ -24,18 +24,16 @@ class Database
 
     private function fetch($sql)
     {
-        print_r($sql);
-        return self::$db->query($sql)->fetch();
+        print_r($sql . PHP_EOL);
+        return self::$db->query($sql)->fetch(PDO::FETCH_ASSOC);
     }
 
     private function execute($sql)
     {
-        print_r($sql);
+        print_r($sql . PHP_EOL);
         if (!self::$db->prepare($sql)->execute()) {
             throw new Exception("Can't execute SQL: $sql", 0);
         }
-
-        return self::$db->lastInsertId();
     }
 
     function create($model)
@@ -44,8 +42,20 @@ class Database
         $query->create($model);
         $sql = $query->build_sql(self::$driver);
 
-        $res = $this->execute($sql);
-        print_r($res);
+        $this->execute($sql);
+        $id = self::$db->lastInsertId();
+
+        return $this->get($model, $id);
+    }
+
+    function get($model, $id)
+    {
+        $query = new Query();
+        $query->get($model, $id);
+        $sql = $query->build_sql(self::$driver);
+
+        $result = $this->fetch($sql);
+        return $model->update_attributes($result);
     }
 
     function update($model)
@@ -54,7 +64,20 @@ class Database
         $query->update($model);
         $sql = $query->build_sql(self::$driver);
 
+        $this->execute($sql);
+
+        //тут вернуть что-то
+    }
+
+    function delete($model)
+    {
+        $query = new Query();
+        $query->delete($model);
+        $sql = $query->build_sql(self::$driver);
+
         $res = $this->execute($sql);
         print_r($res);
+
+        //тут вернуть что-то
     }
 }

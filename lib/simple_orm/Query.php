@@ -14,12 +14,22 @@ class Query
 
     public function create($model)
     {
-        $this->add_operation(array('create' => $model));
+        $this->add_operation(array('insert' => $model));
+    }
+
+    public function get($model, $id = null)
+    {
+        $this->add_operation(array('select' => ['model' => $model, 'id' => $id]));
     }
 
     public function update($model)
     {
         $this->add_operation(array('update' => $model));
+    }
+
+    public function delete($model)
+    {
+        $this->add_operation(array('delete' => $model));
     }
 
     private function add_operation($operation)

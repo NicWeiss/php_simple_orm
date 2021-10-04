@@ -22,13 +22,24 @@ class Database
         self::$driver = self::$db->getAttribute(PDO::ATTR_DRIVER_NAME);
     }
 
-    private function fetch($sql)
+    public function get_driver()
+    {
+        return self::$driver;
+    }
+
+    public function fetch($sql)
     {
         print_r($sql . PHP_EOL);
         return self::$db->query($sql)->fetch(PDO::FETCH_ASSOC);
     }
 
-    private function execute($sql)
+    public function fetch_all($sql)
+    {
+        print_r($sql . PHP_EOL);
+        return self::$db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function execute($sql)
     {
         print_r($sql . PHP_EOL);
         if (!self::$db->prepare($sql)->execute()) {
@@ -79,5 +90,10 @@ class Database
         print_r($res);
 
         //тут вернуть что-то
+    }
+
+    function query()
+    {
+        return new Query($this);
     }
 }

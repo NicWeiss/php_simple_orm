@@ -116,4 +116,29 @@ class MysqlBuilder
         $this->first_operand = 'DELETE FROM';
         $this->where_section = 'WHERE `id`=' . $model->id;
     }
+
+    private function where_processor($properties)
+    {
+        $operand = $properties[0];
+        $properties = $properties[1];
+
+        if (!$this->where_section) {
+            $this->where_section = 'WHERE ';
+        } else {
+            $this->where_section .= " AND ";
+        }
+
+        $properties_string = '';
+
+        foreach ($properties as $property => $value) {
+            if ($properties_string) {
+                $properties_string .= ' AND ';
+            }
+
+            $value = $this->type_wrapper($value);
+            $properties_string .= "`$property` $operand $value";
+        }
+
+        $this->where_section .= $properties_string;
+    }
 }

@@ -54,6 +54,9 @@ final class Main
 
         $first = $notify_repo->get(47);
         var_dump($first);
+
+        $notify_list = $notify_repo->get_by_user_id(1);
+        var_dump($notify_list);
     }
 }
 

@@ -13,4 +13,11 @@ class NotifyRepo extends Repository
         parent::__construct();
         self::$model = new Notify();
     }
+
+    function get_by_user_id($id)
+    {
+        $db = self::$database;
+        $query = $db->query();
+        return $query->get(self::$model)->equal(['user_id' => $id])->fetch_all();
+    }
 }

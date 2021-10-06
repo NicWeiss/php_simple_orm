@@ -71,7 +71,7 @@ class MysqlBuilder
 
     private function select($params)
     {
-        $this->table = strtolower($params['model']->get_model_name());
+        $this->table = $this->prepare_table_name($params['model']->get_model_name());
         $properties = $params['model']->get_model_properties();
 
         $this->first_operand = 'SELECT';
@@ -92,7 +92,7 @@ class MysqlBuilder
 
     private function update($model)
     {
-        $this->table = strtolower($model->get_model_name());
+        $this->table = $this->prepare_table_name($model->get_model_name());
         $properties = $model->get_model_properties();
 
         $this->first_operand = 'UPDATE';
@@ -111,34 +111,26 @@ class MysqlBuilder
 
     private function delete($model)
     {
-        $this->table = strtolower($model->get_model_name());
+        $this->table = $this->prepare_table_name($model->get_model_name());
 
         $this->first_operand = 'DELETE FROM';
         $this->where_section = 'WHERE `id`=' . $model->id;
     }
 
-    private function where_processor($properties)
+    private function where_processor($filter)
     {
-        $operand = $properties[0];
-        $properties = $properties[1];
-
         if (!$this->where_section) {
             $this->where_section = 'WHERE ';
         } else {
             $this->where_section .= " AND ";
         }
+        $value = $this->type_wrapper($filter[2]);
+        $this->where_section .= "`$filter[0]` $filter[1] $value";
+    }
 
-        $properties_string = '';
 
-        foreach ($properties as $property => $value) {
-            if ($properties_string) {
-                $properties_string .= ' AND ';
-            }
-
-            $value = $this->type_wrapper($value);
-            $properties_string .= "`$property` $operand $value";
-        }
-
-        $this->where_section .= $properties_string;
+    private function prepare_table_name($string)
+    {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $string));
     }
 }

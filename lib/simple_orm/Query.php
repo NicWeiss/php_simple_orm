@@ -2,10 +2,12 @@
 
 namespace lib\simple_orm;
 
+use Exception;
 use lib\simple_orm\builder\MysqlBuilder;
 
 class Query
 {
+    const ALLOWED_COMPARSION_OPERATORS = ['>', '>=', '<', '<>', '!=', '<=', '<=>', '=', 'IS', 'IS NOT', 'IS NOT NULL', 'IS NULL', 'LIKE', 'NOT LIKE'];
 
     function __construct($db = null)
     {
@@ -20,7 +22,9 @@ class Query
 
     public function get($model, $id = null)
     {
+        $this->model = $model;
         $this->add_operation(array('select' => ['model' => $model, 'id' => $id]));
+
         return $this;
     }
 
@@ -36,27 +40,23 @@ class Query
         return $this;
     }
 
-    public function equal($params)
+    public function filter_by()
     {
-        $this->add_operation(array('where_processor' => ['=', $params]));
-        return $this;
-    }
+        $filters = func_get_args();
 
-    public function like($params)
-    {
-        $this->add_operation(array('where_processor' => ['LIKE', $params]));
-        return $this;
-    }
+        foreach ($filters as $filter) {
+            $operator = $filter[1];
 
-    public function more($params)
-    {
-        $this->add_operation(array('where_processor' => ['>', $params]));
-        return $this;
-    }
+            if (in_array(strtoupper($operator), self::ALLOWED_COMPARSION_OPERATORS)) {
+                $first_operand = addslashes($filter[0]);
+                $second_operand = addslashes($filter[2]);
 
-    public function less($params)
-    {
-        $this->add_operation(array('where_processor' => ['<', $params]));
+                $this->add_operation(array('where_processor' => [$first_operand, $operator, $second_operand]));
+            } else {
+                throw new Exception("Operator not allowed $operator. Allowed operators is " . implode(self::ALLOWED_COMPARSION_OPERATORS), 0);
+            }
+        }
+
         return $this;
     }
 
@@ -65,16 +65,16 @@ class Query
         array_push($this->store, $operation);
     }
 
-    public function fetch()
+    public function fetch($excluded_relation = '')
     {
         $sql = $this->build_sql($this->db->get_driver());
-        return $this->db->fetch($sql);
+        return $this->db->fetch($this->model, $sql, $excluded_relation);
     }
 
-    public function fetch_all()
+    public function fetch_all($excluded_relation = '')
     {
         $sql = $this->build_sql($this->db->get_driver());
-        return $this->db->fetch_all($sql);
+        return $this->db->fetch_all($this->model, $sql, $excluded_relation);
     }
 
     public function build_sql($driver)

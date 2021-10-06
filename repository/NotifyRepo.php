@@ -14,10 +14,17 @@ class NotifyRepo extends Repository
         self::$model = new Notify();
     }
 
+    function get_notify($user_id, $notify_id)
+    {
+        $db = self::$database;
+        $query = $db->query();
+        return $query->get(self::$model)->filter_by(['user_id', '=', $user_id], ['id', '=', $notify_id])->fetch();
+    }
+
     function get_by_user_id($id)
     {
         $db = self::$database;
         $query = $db->query();
-        return $query->get(self::$model)->equal(['user_id' => $id])->fetch_all();
+        return $query->get(self::$model)->filter_by(['user_id', '=', $id])->fetch_all();
     }
 }

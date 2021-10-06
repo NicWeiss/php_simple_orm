@@ -15,4 +15,12 @@ class Notify extends Model
     var $date = null;
     var $time = null;
     var $category_id = null;
+    var $acceptorsList = null;
+
+    public function define_relations()
+    {
+        $this->relarions = [
+            'acceptorsList' => ['one_to_many', 'model\NotifyAcceptors', 'id', 'notify_id']
+        ];
+    }
 }

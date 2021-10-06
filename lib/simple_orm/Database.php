@@ -4,6 +4,7 @@ namespace lib\simple_orm;
 
 use Exception;
 use PDO;
+use lib\simple_orm\Relation;
 
 class Database
 {
@@ -27,16 +28,39 @@ class Database
         return self::$driver;
     }
 
-    public function fetch($sql)
+    public function fetch($model, $sql, $excluded_relation = '')
     {
         print_r($sql . PHP_EOL);
-        return self::$db->query($sql)->fetch(PDO::FETCH_ASSOC);
+
+        $result = self::$db->query($sql)->fetch(PDO::FETCH_ASSOC);
+        $model->update_attributes($result);
+
+        $relation_resolver = new Relation($this, $model, $excluded_relation);
+        // $model = $relation_resolver->apply_relations();
+        return $model;
+        // $model_with_relations = $relation_resolver->get();
+
+        // return $model_with_relations;
     }
 
-    public function fetch_all($sql)
+    public function fetch_all($model, $sql, $excluded_relation = '')
     {
         print_r($sql . PHP_EOL);
-        return self::$db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $result = self::$db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+        $models = [];
+        $class_name = $model->get_class_name();
+
+        foreach ($result as $item) {
+            $model = new $class_name();
+            $model->update_attributes($item);
+
+            $relation_resolver = new Relation($this, $model, $excluded_relation);
+            $model = $relation_resolver->get();
+            array_push($models, $model);
+        }
+
+        return $models;
     }
 
     public function execute($sql)
@@ -65,8 +89,7 @@ class Database
         $query->get($model, $id);
         $sql = $query->build_sql(self::$driver);
 
-        $result = $this->fetch($sql);
-        return $model->update_attributes($result);
+        return $this->fetch($model, $sql);
     }
 
     function update($model)

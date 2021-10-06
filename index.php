@@ -51,12 +51,13 @@ final class Main
         // DELETE RECORD FROM DATABASE
         $notify_repo->delete($notify_model);
 
+        // GET RECORD BY USER ID AND NOTIFY ID
+        $first = $notify_repo->get_notify(1, 47);
+        // var_dump($first);
 
-        $first = $notify_repo->get(47);
-        var_dump($first);
-
+        // GET ALL RECORDS BY USER ID
         $notify_list = $notify_repo->get_by_user_id(1);
-        var_dump($notify_list);
+        // var_dump($notify_list);
     }
 }
 

@@ -43,7 +43,7 @@ final class Main
         $notify_repo = new NotifyRepo();
 
         //  CREATE RECORD IN DATABASE
-        $notify_repo->create($notify_model);
+        $notify_model = $notify_repo->create($notify_model);
 
         // UPDATE RECORD IN DATABASE
         $notify_repo->update($notify_model, $data_for_update);

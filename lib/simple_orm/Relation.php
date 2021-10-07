@@ -12,22 +12,7 @@ class Relation
     {
         $this->db = $db;
         $this->model = $model;
-        $relations = $this->model->get_relations();
-
-        if (is_array($relations)) {
-            foreach ($relations as $name => $relation) {
-                $type = $relation[0];
-
-                if (
-                    in_array($type, self::RELATION_TYPES) and
-                    $relation[1] != $excluded_relation
-                ) {
-                    $this->$type($name, $relation);
-                }
-            }
-        }
-
-        return $this;
+        $this->excluded_relation = $excluded_relation;
     }
 
     private function one_to_many($name, $relation)
@@ -68,6 +53,30 @@ class Relation
 
     public function get()
     {
+        $relations = $this->model->get_relations();
+
+        if (is_array($relations)) {
+            foreach ($relations as $name => $relation) {
+                $type = $relation[0];
+
+                if (
+                    in_array($type, self::RELATION_TYPES) and
+                    $relation[1] != $this->excluded_relation
+                ) {
+                    $this->$type($name, $relation);
+                }
+            }
+        }
+
         return $this->model;
+    }
+
+    public function operate($operation_type)
+    {
+        var_dump($operation_type);
+        // читать релейшены, кроме тех что исключены
+        // если one_to_one, то смотреть на id и создавать или обновлять в зависимости от его наличия.
+        // если one_to_many, то поднимать все промежуточные связи по этой модели, сравнивать с колличеством релейшенов в модели
+        //   существующийе пропускать, новые создавать, отсутствующие - удалять
     }
 }

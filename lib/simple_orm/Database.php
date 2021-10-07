@@ -36,16 +36,15 @@ class Database
         $model->update_attributes($result);
 
         $relation_resolver = new Relation($this, $model, $excluded_relation);
-        // $model = $relation_resolver->apply_relations();
-        return $model;
-        // $model_with_relations = $relation_resolver->get();
+        $model = $relation_resolver->get();
 
-        // return $model_with_relations;
+        return $model;
     }
 
     public function fetch_all($model, $sql, $excluded_relation = '')
     {
         print_r($sql . PHP_EOL);
+
         $result = self::$db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
         $models = [];
@@ -63,56 +62,20 @@ class Database
         return $models;
     }
 
-    public function execute($sql)
+    public function execute($model, $sql, $operation_type = '', $excluded_relation = '')
     {
         print_r($sql . PHP_EOL);
+
+        $relation_resolver = new Relation($this, $model, $excluded_relation);
+        $relation_resolver->operate($operation_type);
+
         if (!self::$db->prepare($sql)->execute()) {
             throw new Exception("Can't execute SQL: $sql", 0);
         }
-    }
 
-    function create($model)
-    {
-        $query = new Query();
-        $query->create($model);
-        $sql = $query->build_sql(self::$driver);
-
-        $this->execute($sql);
-        $id = self::$db->lastInsertId();
-
-        return $this->get($model, $id);
-    }
-
-    function get($model, $id)
-    {
-        $query = new Query();
-        $query->get($model, $id);
-        $sql = $query->build_sql(self::$driver);
-
-        return $this->fetch($model, $sql);
-    }
-
-    function update($model)
-    {
-        $query = new Query();
-        $query->update($model);
-        $sql = $query->build_sql(self::$driver);
-
-        $this->execute($sql);
-
-        //тут вернуть что-то
-    }
-
-    function delete($model)
-    {
-        $query = new Query();
-        $query->delete($model);
-        $sql = $query->build_sql(self::$driver);
-
-        $res = $this->execute($sql);
-        print_r($res);
-
-        //тут вернуть что-то
+        if ($operation_type == 'create') {
+            return self::$db->lastInsertId();
+        }
     }
 
     function query()

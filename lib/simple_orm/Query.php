@@ -11,13 +11,18 @@ class Query
 
     function __construct($db = null)
     {
+        $this->operation_type = '';
         $this->store = [];
         $this->db = $db;
     }
 
     public function create($model)
     {
+        $this->model = $model;
+        $this->operation_type = 'create';
         $this->add_operation(array('insert' => $model));
+
+        return $this;
     }
 
     public function get($model, $id = null)
@@ -30,13 +35,19 @@ class Query
 
     public function update($model)
     {
+        $this->model = $model;
+        $this->operation_type = 'update';
         $this->add_operation(array('update' => $model));
+
         return $this;
     }
 
     public function delete($model)
     {
+        $this->model = $model;
+        $this->operation_type = 'delete';
         $this->add_operation(array('delete' => $model));
+
         return $this;
     }
 
@@ -75,6 +86,12 @@ class Query
     {
         $sql = $this->build_sql($this->db->get_driver());
         return $this->db->fetch_all($this->model, $sql, $excluded_relation);
+    }
+
+    public function execute($excluded_relation = '')
+    {
+        $sql = $this->build_sql($this->db->get_driver());
+        return $this->db->execute($this->model, $sql, $this->operation_type, $excluded_relation);
     }
 
     public function build_sql($driver)

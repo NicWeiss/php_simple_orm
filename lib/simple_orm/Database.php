@@ -66,15 +66,17 @@ class Database
     {
         print_r($sql . PHP_EOL);
 
-        $relation_resolver = new Relation($this, $model, $excluded_relation);
-        $relation_resolver->operate($operation_type);
-
         if (!self::$db->prepare($sql)->execute()) {
             throw new Exception("Can't execute SQL: $sql", 0);
         }
 
+        $last_inserted = self::$db->lastInsertId();
+
+        $relation_resolver = new Relation($this, $model, $excluded_relation);
+        $relation_resolver->operate($operation_type, $last_inserted);
+
         if ($operation_type == 'create') {
-            return self::$db->lastInsertId();
+            return $last_inserted;
         }
     }
 

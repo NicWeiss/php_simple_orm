@@ -20,7 +20,7 @@ class Notify extends Model
     public function define_relations()
     {
         $this->relarions = [
-            'acceptorsList' => ['one_to_many', 'model\NotifyAcceptors', 'id', 'notify_id']
+            'acceptorsList' => ['many_to_many', 'model\NotifyAcceptors', 'id', 'notify_id']
         ];
     }
 }

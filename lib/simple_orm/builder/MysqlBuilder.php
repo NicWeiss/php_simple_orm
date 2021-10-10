@@ -50,7 +50,7 @@ class MysqlBuilder
 
     private function insert($model)
     {
-        $this->table = strtolower($model->get_model_name());
+        $this->table = $this->prepare_table_name($model->get_model_name());
         $properties = $model->get_model_properties();
         $fields = '';
         $values = '';
@@ -114,7 +114,9 @@ class MysqlBuilder
         $this->table = $this->prepare_table_name($model->get_model_name());
 
         $this->first_operand = 'DELETE FROM';
-        $this->where_section = 'WHERE `id`=' . $model->id;
+        if ($model->id) {
+            $this->where_section = 'WHERE `id`=' . $model->id;
+        }
     }
 
     private function where_processor($filter)

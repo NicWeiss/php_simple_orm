@@ -33,8 +33,9 @@ class Repository
     {
         $db = self::$database;
         $query = $db->query();
+        $model = $model->update_attributes($new_values);
 
-        return $query->update($model->update_attributes($new_values))->execute();
+        return $query->update($model)->execute();
     }
 
     public function delete($model)
